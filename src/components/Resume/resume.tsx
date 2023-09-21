@@ -141,9 +141,21 @@ const sampleSkills = [
 ];
 
 const Resume = () => {
-  const { setName, addContact, setLocation, addEducation, addExperience, addProject, addSkills } = useResume();
+  const { setName, addContact, setLocation, addEducation, addExperience, addProject, addSkills, menu, setMenu } = useResume();
   const [ loadOnce, setLoadOnce ] = useState(false);
   const [ loaded, setLoaded ] = useState(0);
+
+  const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const e = event.currentTarget.id;
+    console.log(e);
+
+    setMenu((prevMenu) => ({
+      clickedElements: [...prevMenu.clickedElements, e],
+      position: [event.clientX, event.clientY],
+    }));
+  };
+
   useEffect(() => {
     if (loadOnce) return;
     setName('Eric Xie');
@@ -168,7 +180,7 @@ const Resume = () => {
 
   return (
     <div className='flex h-full w-full items-center justify-center flex-col bg-slate-100'>
-      <div className='w-[874px] h-[1131px] py-8 px-12 font-serif items-center justify-center bg-slate-50' id="resume">
+      <div className='w-[874px] h-[1131px] py-8 px-12 font-serif items-center justify-center bg-slate-50' id="resume-root" onContextMenu={handleRightClick}>
         <Name/>
         <Contacts/>
         <Location/>
