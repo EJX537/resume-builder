@@ -136,9 +136,9 @@ const Resume = () => {
 
   useEffect(() => {
     if (loadOnce) return;
-    setName('Eric Xie');
+    setName('Insert Name');
     setContacts(['phone', 'email', 'social', 'website']);
-    setLocation('United States, San Francisco, CA');
+    setLocation('Location');
     addEducation(newEducation());
     addExperience(sampleExperience);
     addProject(sampleProject_0);

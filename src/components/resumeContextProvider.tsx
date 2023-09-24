@@ -12,12 +12,12 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
-  const [menu, setMenu] = useState<Menu>({clickedElements: [],position: [0, 0]});
+  const [menu, setMenu] = useState<Menu>({ clickedElements: [], position: [0, 0] });
   const addEducation = (education: Education) => {
     setEducations((prevEducation) => [...prevEducation, education]);
   };
-  
-  const removeEducation = (index: number) =>{
+
+  const removeEducation = (index: number) => {
     console.log(educations);
     // if (!(0 < index && index < educations.length)) throw new Error('Error Education does not exist');
     const newEducations = [...educations];
@@ -83,10 +83,10 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
     projects.sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
-    
-      if (dateA > dateB) return -1; 
-      if (dateA < dateB) return 1;  
-      return 0;                     
+
+      if (dateA > dateB) return -1;
+      if (dateA < dateB) return 1;
+      return 0;
     });
     setProjects(newProjects);
   };
@@ -123,7 +123,7 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
         removeContact, location, setLocation, experiences, editContacts, rearrangeContacts, projects, setProjects,
         addProject, removeProject, editProject, addEducation, removeEducation, editEducation, skills, addSkills, setEducations,
         menu, setMenu, editSkill
-        }}>
+      }}>
       {children}
     </ResumeContext.Provider>
   );

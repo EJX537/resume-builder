@@ -7,7 +7,7 @@ function App() {
   return (
     <main className="flex h-screen w-screen flex-col justify-normal xl:mx-10">
       <ResumeProvider>
-        <Resume/>
+        <Resume />
         <button className='border border-black rounded-lg p-2 font-bold text-red-950' onClick={handleGenerate}>
           Generate PDF
         </button>

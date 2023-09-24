@@ -29,7 +29,7 @@ const sortByBlockOrNumberSuffix = (arr: string[]): string[] => {
     const valueA = a.split('-')[1];
     const valueB = b.split('-')[1];
 
-    const orderA: number = customSortOrder[valueA] || 1; 
+    const orderA: number = customSortOrder[valueA] || 1;
     const orderB: number = customSortOrder[valueB] || 1;
 
     return orderA - orderB;
@@ -42,7 +42,7 @@ const RootScope = (props: RootProps) => {
   if (props.contacts.length === 1 && props.contacts[0] === '') {
     buttonList.push({
       content: 'Restore contacts',
-      callback: () => props.setContacts(['phone', 'email', 'social' ,'website'])
+      callback: () => props.setContacts(['phone', 'email', 'social', 'website'])
     });
   }
 
@@ -77,7 +77,7 @@ const RootScope = (props: RootProps) => {
   if (props.skills.length === 0) {
     buttonList.push({
       content: 'Restore Skills',
-      callback: () => props.addSkills({type: 'Languages', skills: ['Python', 'TypeScript', 'JavaScript', '...']})
+      callback: () => props.addSkills({ type: 'Languages', skills: ['Python', 'TypeScript', 'JavaScript', '...'] })
     });
   }
 
@@ -87,7 +87,7 @@ const RootScope = (props: RootProps) => {
 const BlockScope = (instance: string, addEducation: (education: Education) => void): Content_Callback => {
   const content: string = `Add ${instance}`;
   let callBack_function: (() => void) | undefined;
-  
+
   switch (instance) {
     case 'education':
       callBack_function = () => addEducation(newEducation());
@@ -126,10 +126,10 @@ const ElementScope = (instance: string, scope: string, educations: Education[], 
         callback: () => editEducation(education, index)
       });
     }
-      buttonList.push({
-        content: 'Delete Education',
-        callback: () => removeEducation(index)
-      });
+    buttonList.push({
+      content: 'Delete Education',
+      callback: () => removeEducation(index)
+    });
   }
 
   console.log(buttonList);
@@ -141,7 +141,7 @@ const ElementScope = (instance: string, scope: string, educations: Education[], 
 
 const ButtonGenerator = (sortedList: string[]): Content_Callback[] => {
   const { educations, projects, contacts, experiences, skills, location, setContacts, addEducation, addExperience, addProject, setLocation, addSkills, editEducation, removeEducation } = useResume();
-  const buttonList: Content_Callback[] = [];  
+  const buttonList: Content_Callback[] = [];
   const rootProps: RootProps = { educations, projects, contacts, experiences, skills, location, setContacts, addEducation, addExperience, addProject, setLocation, addSkills };
   for (const element of sortedList) {
     const [instance, scope] = element.split('-');
@@ -167,7 +167,7 @@ const DisplayElement: React.FC<ChildProps> = (props) => {
   const sortedClickElements = sortByBlockOrNumberSuffix(props.value.clickedElements);
   const listElements: Content_Callback[] = ButtonGenerator(sortedClickElements);
   return (
-    <ul className={`${ listElements.length === 0 ? 'hidden' : 'block' } absolute bg-slate-400 p-1 rounded-md divide-y divide-black`} style={{ left: props.value.position[0], top: props.value.position[1] }}>
+    <ul className={`${listElements.length === 0 ? 'hidden' : 'block'} absolute bg-slate-400 p-1 rounded-md divide-y divide-black`} style={{ left: props.value.position[0], top: props.value.position[1] }}>
       {
         listElements.map((element: Content_Callback, index) => (
           <li key={index}>
@@ -184,8 +184,8 @@ const DisplayElement: React.FC<ChildProps> = (props) => {
 const MenuBlock = () => {
   const { menu, setMenu } = useResume();
   return (
-    <div className={`${ menu.clickedElements.length ? 'flex' : 'hidden' } absolute top-0 left-0 h-screen w-screen`} onClick={() => setMenu({clickedElements: [], position: []})}>
-      <DisplayElement value={menu}/>
+    <div className={`${menu.clickedElements.length ? 'flex' : 'hidden'} absolute top-0 left-0 h-screen w-screen`} onClick={() => setMenu({ clickedElements: [], position: [] })}>
+      <DisplayElement value={menu} />
     </div>
   );
 };

@@ -31,8 +31,8 @@ const classifyAndRenderContact = (contact: string, index: number) => {
 
 const Contacts = () => {
   const { contacts, setContacts, setMenu } = useResume();
-  const [ editText, setText ] = useState('');
-  const [ activeId, setActiveId ] = useState('');
+  const [editText, setText] = useState('');
+  const [activeId, setActiveId] = useState('');
 
   const loadEditText = (event: React.MouseEvent<HTMLDivElement>, text: string) => {
     setActiveId(event.currentTarget.id);
