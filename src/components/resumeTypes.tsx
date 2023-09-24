@@ -90,6 +90,7 @@ export interface ResumeState {
   removeEducation: (index: number) => void;
   editEducation: (education: Education, index: number) => void;
   addExperience: (experience: Experience) => void;
+  editExperience: (experience: Experience, index: number) => void;
   removeExperience: (listIndex: number) => void;
   addContact: (contact: string) => void;
   removeContact: (contactIndex: number) => void;
@@ -97,8 +98,9 @@ export interface ResumeState {
   rearrangeContacts: (i0: number, i1: number) => void;
   addProject: (project: Project) => void;
   removeProject: (index: number) => void;
-  editProject: (index: number, project: Project) => void;
+  editProject: (project: Project, index: number) => void;
   addSkills: (skill: Skill) => void;
+  editSkill: (skill: Skill, index: number) => void;
 }
 
 export interface ProviderProps {

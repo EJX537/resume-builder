@@ -11,13 +11,13 @@ interface RootProps {
   location: string;
   setLocation: Dispatch<React.SetStateAction<string>>;
   contacts: string[];
+  setContacts: Dispatch<React.SetStateAction<string[]>>
   educations: Education[];
   experiences: Experience[];
   projects: Project[];
   skills: Skill[];
   addEducation: (education: Education) => void;
   addExperience: (experience: Experience) => void;
-  addContact: (contact: string) => void;
   addProject: (project: Project) => void;
   addSkills: (skill: Skill) => void;
 }
@@ -39,18 +39,17 @@ const sortByBlockOrNumberSuffix = (arr: string[]): string[] => {
 
 const RootScope = (props: RootProps) => {
   const buttonList: Content_Callback[] = [];
-
-  if (props.contacts.length === 0) {
+  if (props.contacts.length === 1 && props.contacts[0] === '') {
     buttonList.push({
       content: 'Restore contacts',
-      callback: () => props.addContact('phone/email/social/website')
+      callback: () => props.setContacts(['phone', 'email', 'social' ,'website'])
     });
   }
 
   if (props.location === '') {
     buttonList.push({
       content: 'Add location',
-      callback: () => props.setLocation('Country, City, State')
+      callback: () => props.setLocation('Location')
     });
   }
 
@@ -90,8 +89,6 @@ const BlockScope = (instance: string, addEducation: (education: Education) => vo
   let callBack_function: (() => void) | undefined;
   
   switch (instance) {
-    case 'contact':
-      break;
     case 'education':
       callBack_function = () => addEducation(newEducation());
       break;
@@ -143,14 +140,15 @@ const ElementScope = (instance: string, scope: string, educations: Education[], 
 
 
 const ButtonGenerator = (sortedList: string[]): Content_Callback[] => {
-  const { educations, projects, contacts, experiences, skills, location, addContact, addEducation, addExperience, addProject, setLocation, addSkills, editEducation, removeEducation } = useResume();
+  const { educations, projects, contacts, experiences, skills, location, setContacts, addEducation, addExperience, addProject, setLocation, addSkills, editEducation, removeEducation } = useResume();
   const buttonList: Content_Callback[] = [];  
-  const rootProps: RootProps = { educations, projects, contacts, experiences, skills, location, addContact, addEducation, addExperience, addProject, setLocation, addSkills };
+  const rootProps: RootProps = { educations, projects, contacts, experiences, skills, location, setContacts, addEducation, addExperience, addProject, setLocation, addSkills };
   for (const element of sortedList) {
     const [instance, scope] = element.split('-');
     if (scope === 'root') {
       RootScope(rootProps).forEach(e => buttonList.push(e));
     } else if (scope === 'Block') {
+      if (instance === 'contact') break;
       buttonList.push(BlockScope(instance, addEducation));
     } else {
       ElementScope(instance, scope, educations, editEducation, removeEducation).forEach(e => buttonList.push(e));

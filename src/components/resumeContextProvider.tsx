@@ -1,12 +1,12 @@
 import { ProviderProps, ResumeState, Education, Experience, Project, Skill, Menu } from './resumeTypes';
 
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 
 export const ResumeContext = createContext<ResumeState | undefined>(undefined);
 
 const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
   const [name, setName] = useState('');
-  const [contacts, setContacts] = useState<string[]>([]);
+  const [contacts, setContacts] = useState<string[]>(['']);
   const [location, setLocation] = useState('');
   const [educations, setEducations] = useState<Education[]>([]);
   const [experiences, setExperiences] = useState<Experience[]>([]);
@@ -34,6 +34,13 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
 
   const addExperience = (experience: Experience) => {
     setExperiences((prevExperience) => [...prevExperience, experience]);
+  };
+
+  const editExperience = (experience: Experience, index: number) => {
+    if (!(0 <= index && index < educations.length)) throw new Error('Error Experience does not exist');
+    const newExperiences = [...experiences];
+    newExperiences[index] = experience;
+    setExperiences(newExperiences);
   };
 
   const removeExperience = (index: number) => {
@@ -91,8 +98,8 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
     setProjects(newProjects);
   };
 
-  const editProject = (index: number, project: Project) => {
-    if (!(0 < index && index < projects.length)) throw new Error('Error Project does not exist');
+  const editProject = (project: Project, index: number) => {
+    if (!(0 <= index && index < projects.length)) throw new Error('Error Project does not exist');
     const newProjects = [...projects];
     newProjects[index] = project;
     setProjects(newProjects);
@@ -102,17 +109,20 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
     setSkills((prevSkills) => [...prevSkills, skill]);
   };
 
-  useEffect(() => {
-    // setContacts([]);
-  }, []);
+  const editSkill = (skill: Skill, index: number) => {
+    if (!(0 <= index && index < skills.length)) throw new Error('Error Skill does not exist');
+    const newSkills = [...skills];
+    newSkills[index] = skill;
+    setSkills(newSkills);
+  };
 
   return (
     <ResumeContext.Provider
       value={{
-        name, setName, educations, addExperience, removeExperience, contacts, setContacts, addContact, setExperiences,
+        name, setName, educations, addExperience, editExperience, removeExperience, contacts, setContacts, addContact, setExperiences,
         removeContact, location, setLocation, experiences, editContacts, rearrangeContacts, projects, setProjects,
         addProject, removeProject, editProject, addEducation, removeEducation, editEducation, skills, addSkills, setEducations,
-        menu, setMenu
+        menu, setMenu, editSkill
         }}>
       {children}
     </ResumeContext.Provider>

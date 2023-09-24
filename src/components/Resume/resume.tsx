@@ -14,7 +14,7 @@ import { useResume } from '../useResumeContext';
 import { jsPDF } from 'jspdf';
 
 export const handleGenerate = () => {
-  const element = document.getElementById('resume');
+  const element = document.getElementById('resume-root');
   if (!element) return;
 
   // Create a new jsPDF instance
@@ -30,26 +30,6 @@ export const handleGenerate = () => {
       pdf.save('test2.pdf');
     }
   });
-};
-
-const testContacts = [
-  '415-606-7858',
-  'meisericxie@gmail.com',
-  'linkedin.com/in/ericjxie',
-  'github.com/EJX537',
-  'ericjxie.com'
-];
-
-const sampleEducation: Education = {
-  school: 'University of California, Santa Cruz',
-  location: 'Santa Cruz, CA',
-  startDate: 'August 2020',
-  endDate: 'June 2024',
-  degree: 'Bachelor of Science in Computer Engineering',
-  gpa: '3.5',
-  other: [
-    'Coursework: Principles of Computer Systems Design, Full Stack Web Development, Computational Models, Introduction to Data Structures and Algorithms'
-  ]
 };
 
 const sampleExperience: Experience = {
@@ -141,15 +121,13 @@ const sampleSkills = [
 ];
 
 const Resume = () => {
-  const { setName, addContact, setLocation, addEducation, addExperience, addProject, addSkills, menu, setMenu } = useResume();
+  const { setName, addContact, setLocation, addEducation, addExperience, addProject, addSkills, setMenu, setContacts } = useResume();
   const [ loadOnce, setLoadOnce ] = useState(false);
   const [ loaded, setLoaded ] = useState(0);
 
   const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     const e = event.currentTarget.id;
-    console.log(e);
-
     setMenu((prevMenu) => ({
       clickedElements: [...prevMenu.clickedElements, e],
       position: [event.clientX, event.clientY],
@@ -159,9 +137,7 @@ const Resume = () => {
   useEffect(() => {
     if (loadOnce) return;
     setName('Eric Xie');
-    testContacts.forEach((c) => {
-      addContact(c);
-    });
+    setContacts(['phone', 'email', 'social', 'website']);
     setLocation('United States, San Francisco, CA');
     addEducation(newEducation());
     addExperience(sampleExperience);
@@ -169,7 +145,7 @@ const Resume = () => {
     addProject(sampleProject_3);
     // removeEducation(0);
     setLoadOnce(true);
-  }, [addContact, addEducation, addExperience, addProject, loadOnce, setLocation, setName]);
+  }, [addContact, addEducation, addExperience, addProject, loadOnce, setContacts, setLocation, setName]);
 
   useEffect(() => {
     if (loaded > 3) return;
