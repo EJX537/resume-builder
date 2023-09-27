@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Education } from '../../resumeTypes';
 import { useResume } from '../../useResumeContext';
+import { saveToLocal } from '../util';
 
 const EducationBlock = () => {
-  const { educations, editEducation, setMenu } = useResume();
+  const { educations, editEducation, setMenu, name, location, contacts, experiences, projects, skills } = useResume();
   const [editText, setText] = useState('');
   const [activeId, setActiveId] = useState('');
 
@@ -41,6 +42,7 @@ const EducationBlock = () => {
         break;
     }
     editEducation(newEducation, index);
+    saveToLocal(name, location, contacts, educations, experiences, projects, skills);
     return;
   };
 
@@ -74,6 +76,7 @@ const EducationBlock = () => {
         break;
     }
     editEducation(newEducation, index);
+    saveToLocal(name, location, contacts, educations, experiences, projects, skills);
     return;
   };
 

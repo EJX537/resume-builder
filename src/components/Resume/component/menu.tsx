@@ -1,25 +1,32 @@
-import { Dispatch } from 'react';
-import { Education, Experience, Menu, Project, Skill, newEducation, newExperience, newProject } from '../../resumeTypes';
+import { Dispatch, useEffect, useState } from 'react';
+import { Education, Experience, Menu, Project, Skill, newEducation, newExperience, newProject, newSkill } from '../../resumeTypes';
 import { useResume } from '../../useResumeContext';
+import { MenuProps } from '../resume';
 
 interface Content_Callback {
   content: string;
   callback?: (() => void) | undefined;
 }
-
 interface RootProps {
+  educations: Education[];
+  projects: Project[];
+  contacts: string[];
   location: string;
   setLocation: Dispatch<React.SetStateAction<string>>;
-  contacts: string[];
   setContacts: Dispatch<React.SetStateAction<string[]>>
-  educations: Education[];
+  setSkills: Dispatch<React.SetStateAction<Skill[]>>;
   experiences: Experience[];
-  projects: Project[];
   skills: Skill[];
   addEducation: (education: Education) => void;
   addExperience: (experience: Experience) => void;
   addProject: (project: Project) => void;
-  addSkills: (skill: Skill) => void;
+  addSkill: (skill: Skill) => void;
+  editExperience: (experience: Experience, index: number) => void;
+  editEducation: (education: Education, index: number) => void;
+  removeEducation: (index: number) => void;
+  removeExperience: (listIndex: number) => void;
+  editProject: (project: Project, index: number) => void;
+  removeProject: (index: number) => void;
 }
 
 const sortByBlockOrNumberSuffix = (arr: string[]): string[] => {
@@ -77,27 +84,40 @@ const RootScope = (props: RootProps) => {
   if (props.skills.length === 0) {
     buttonList.push({
       content: 'Restore Skills',
-      callback: () => props.addSkills({ type: 'Languages', skills: ['Python', 'TypeScript', 'JavaScript', '...'] })
+      callback: () => props.setSkills(newSkill())
     });
   }
 
   return buttonList;
 };
 
-const BlockScope = (instance: string, addEducation: (education: Education) => void): Content_Callback => {
-  const content: string = `Add ${instance}`;
-  let callBack_function: (() => void) | undefined;
+interface BlockProps {
+  addEducation: (education: Education) => void,
+  addExperience: (experience: Experience) => void,
+  addProject: (project: Project) => void,
+  setSkills: Dispatch<React.SetStateAction<Skill[]>>;
+}
 
+const BlockScope = (instance: string, { addEducation, addExperience, addProject, setSkills }: BlockProps): Content_Callback => {
+  let content: string = '';
+  let callBack_function: (() => void) | undefined;
+  console.log(instance);
   switch (instance) {
     case 'education':
+      content = `Add ${instance}`;
       callBack_function = () => addEducation(newEducation());
       break;
     case 'experience':
+      content = `Add ${instance}`;
+      callBack_function = () => addExperience(newExperience());
       break;
-    case 'projects':
+    case 'project':
+      content = `Add ${instance}`;
+      callBack_function = () => addProject(newProject());
       break;
-    case 'skills':
-      break;
+    case 'skill':
+      content = `Remove ${instance}`;
+      callBack_function = () => setSkills([]);
   }
   return {
     content: content,
@@ -105,16 +125,30 @@ const BlockScope = (instance: string, addEducation: (education: Education) => vo
   };
 };
 
-const ElementScope = (instance: string, scope: string, educations: Education[], editEducation: (education: Education, index: number) => void, removeEducation: (index: number) => void) => {
+interface ElementProps {
+  educations: Education[];
+  editEducation: (education: Education, index: number) => void;
+  removeEducation: (index: number) => void;
+  experiences: Experience[];
+  editExperience: (experience: Experience, index: number) => void;
+  removeExperience: (index: number) => void;
+  projects: Project[];
+  editProject: (project: Project, index: number) => void;
+  removeProject: (index: number) => void;
+  setSkills: Dispatch<React.SetStateAction<Skill[]>>;
+}
+
+const ElementScope = (instance: string, scope: string, { educations, editEducation, removeEducation, experiences, editExperience, removeExperience, projects, editProject, removeProject, setSkills }: ElementProps) => {
   const buttonList: Content_Callback[] = [];
   const index = parseInt(scope, 10);
 
   if (instance === 'education') {
+    console.log(educations);
     if (!educations[index].gpa) {
       const education: Education = { ...educations[index] };
       education.gpa = '4.0';
       buttonList.push({
-        content: 'Restore gpa',
+        content: 'Restore GPA',
         callback: () => editEducation(education, index),
       });
     }
@@ -122,7 +156,7 @@ const ElementScope = (instance: string, scope: string, educations: Education[], 
       const education: Education = { ...educations[index] };
       education.other.push('');
       buttonList.push({
-        content: 'Restore bulletpoints',
+        content: 'Restore Bulletpoints',
         callback: () => editEducation(education, index)
       });
     }
@@ -131,45 +165,126 @@ const ElementScope = (instance: string, scope: string, educations: Education[], 
       callback: () => removeEducation(index)
     });
   }
-
-  console.log(buttonList);
+  else if (instance === 'experience') {
+    if (!(experiences[index].company)) {
+      const experience: Experience = { ...experiences[index] };
+      experience.company = 'Insert Company';
+      buttonList.push({
+        content: 'Restore company',
+        callback: () => editExperience(experience, index)
+      });
+    }
+    if (!(experiences[index].location)) {
+      const experience: Experience = { ...experiences[index] };
+      experience.company = 'Insert Location';
+      buttonList.push({
+        content: 'Restore Location',
+        callback: () => editExperience(experience, index)
+      });
+    }
+    if (experiences[index].bulletPoints.length === 0) {
+      const experience: Experience = { ...experiences[index] };
+      experience.bulletPoints = ['...'];
+      buttonList.push({
+        content: 'Restore Bulletpoints',
+        callback: () => editExperience(experience, index)
+      });
+    }
+    buttonList.push({
+      content: 'Delete Experience',
+      callback: () => removeExperience(index)
+    });
+  }
+  else if (instance === 'project') {
+    if (projects[index].technologies.length === 0) {
+      const project: Project = { ...projects[index] };
+      project.technologies = ['...'];
+      buttonList.push({
+        content: 'Restore Technologies',
+        callback: () => editProject(project, index)
+      });
+    }
+    if (!(projects[index].date)) {
+      const project: Project = { ...projects[index] };
+      project.date = 'Insert Date';
+      buttonList.push({
+        content: 'Restore Date',
+        callback: () => editProject(project, index)
+      });
+    }
+    if (projects[index].bulletPoints.length === 0) {
+      const project: Project = { ...projects[index] };
+      project.bulletPoints = ['...'];
+      buttonList.push({
+        content: 'Restore Bulletpoints',
+        callback: () => editProject(project, index)
+      });
+    }
+    buttonList.push({
+      content: 'Delete Project',
+      callback: () => removeProject(index)
+    });
+  }
+  else if (instance === 'skill') {
+    buttonList.push({
+      content: 'Delete Skill',
+      callback: () => setSkills([])
+    });
+  }
 
   // Return buttonList with callback functions
   return buttonList;
 };
 
-
-const ButtonGenerator = (sortedList: string[]): Content_Callback[] => {
-  const { educations, projects, contacts, experiences, skills, location, setContacts, addEducation, addExperience, addProject, setLocation, addSkills, editEducation, removeEducation } = useResume();
+const ButtonGenerator = (sortedList: string[], props: RootProps): Content_Callback[] => {
+  if (sortedList.length === 0) return [];
   const buttonList: Content_Callback[] = [];
-  const rootProps: RootProps = { educations, projects, contacts, experiences, skills, location, setContacts, addEducation, addExperience, addProject, setLocation, addSkills };
   for (const element of sortedList) {
     const [instance, scope] = element.split('-');
     if (scope === 'root') {
-      RootScope(rootProps).forEach(e => buttonList.push(e));
+      RootScope(props).forEach(e => buttonList.push(e));
     } else if (scope === 'Block') {
       if (instance === 'contact') break;
-      buttonList.push(BlockScope(instance, addEducation));
+      buttonList.push(BlockScope(instance, props));
     } else {
-      ElementScope(instance, scope, educations, editEducation, removeEducation).forEach(e => buttonList.push(e));
+      ElementScope(instance, scope, props).forEach(e => buttonList.push(e));
     }
   }
   return buttonList;
 };
 
 interface ChildProps {
-  value: Menu;
+  menu: Menu;
+  setMenu: Dispatch<React.SetStateAction<Menu>>;
+  clickedElements: string[];
+  setClickedElements: React.Dispatch<React.SetStateAction<string[]>>;
+  childProps: RootProps;
 }
 
-
-
 const DisplayElement: React.FC<ChildProps> = (props) => {
-  const sortedClickElements = sortByBlockOrNumberSuffix(props.value.clickedElements);
-  const listElements: Content_Callback[] = ButtonGenerator(sortedClickElements);
+  const childProps = props.childProps;
+  const menu = props.menu;
+  const clickedElements = props.clickedElements;
+  const setMenu = props.setMenu;
+  const [list, setList] = useState<Content_Callback[]>([]);
+
+  const handleClick = () => {
+    setMenu(() => ({
+      clickedElements: [''],
+      position: [-99, -99],
+    }));
+  };
+
+  useEffect(() => {
+    if (menu.clickedElements.length === 0) return;
+    setList(ButtonGenerator(sortByBlockOrNumberSuffix(menu.clickedElements), childProps));
+    setMenu({ ...menu, clickedElements: [] });
+  }, [childProps, menu.clickedElements, clickedElements, menu, setMenu]);
+
   return (
-    <ul className={`${listElements.length === 0 ? 'hidden' : 'block'} absolute bg-slate-400 p-1 rounded-md divide-y divide-black`} style={{ left: props.value.position[0], top: props.value.position[1] }}>
+    <ul className={`${list.length === 0 ? 'hidden' : 'block'} absolute bg-slate-400 p-1 rounded-md divide-y divide-black`} style={{ left: props.menu.position[0], top: props.menu.position[1] }} onClick={handleClick}>
       {
-        listElements.map((element: Content_Callback, index) => (
+        list.map((element: Content_Callback, index) => (
           <li key={index}>
             <button onClick={element.callback}>
               {element.content}
@@ -181,12 +296,11 @@ const DisplayElement: React.FC<ChildProps> = (props) => {
   );
 };
 
-const MenuBlock = () => {
-  const { menu, setMenu } = useResume();
+const MenuBlock: React.FC<MenuProps> = (props) => {
+  const { menu, setMenu, educations, editEducation, removeEducation, experiences, editExperience, removeExperience, addProject, addSkill, projects, editProject, removeProject, contacts, location, setLocation, setContacts, skills, addEducation, addExperience, setSkills } = useResume();
+
   return (
-    <div className={`${menu.clickedElements.length ? 'flex' : 'hidden'} absolute top-0 left-0 h-screen w-screen`} onClick={() => setMenu({ clickedElements: [], position: [] })}>
-      <DisplayElement value={menu} />
-    </div>
+    <DisplayElement menu={menu} setMenu={setMenu} clickedElements={props.clickedElements} setClickedElements={props.setClickedElements} childProps={{ addProject, addSkill, setContacts, skills, addEducation, addExperience, contacts, location, setLocation, educations, editEducation, removeEducation, experiences, editExperience, removeExperience, projects, editProject, removeProject, setSkills }} />
   );
 };
 

@@ -1,17 +1,15 @@
 import ResumeProvider from './components/resumeContextProvider';
 import Resume from './components/Resume/resume';
-import { handleGenerate } from './components/Resume/resume';
-import MenuBlock from './components/Resume/component/menu';
+import PdfGenerator from './components/Resume/component/pdfGenerator';
+
+
 
 function App() {
   return (
     <main className="flex h-screen w-screen flex-col justify-normal xl:mx-10">
       <ResumeProvider>
         <Resume />
-        <button className='border border-black rounded-lg p-2 font-bold text-red-950' onClick={handleGenerate}>
-          Generate PDF
-        </button>
-        <MenuBlock />
+        <PdfGenerator />
       </ResumeProvider>
     </main>
   );

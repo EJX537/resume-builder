@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Experience } from '../../resumeTypes';
 import { useResume } from '../../useResumeContext';
+import { saveToLocal } from '../util';
 
 const ExperienceBlock = () => {
-  const { experiences, editExperience, setMenu } = useResume();
+  const { experiences, editExperience, setMenu, name, location, contacts, educations, projects, skills } = useResume();
   const [editText, setText] = useState('');
   const [activeId, setActiveId] = useState('');
 
   const loadEditText = (event: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLSpanElement>, text: string) => {
-    console.log(event.currentTarget.id);
     if (event.currentTarget.id === activeId) return;
     setActiveId(event.currentTarget.id);
     setText(text);
@@ -39,6 +39,7 @@ const ExperienceBlock = () => {
         break;
     }
     editExperience(newExperience, index);
+    saveToLocal(name, location, contacts, educations, experiences, projects, skills);
     return;
   };
 
@@ -69,6 +70,7 @@ const ExperienceBlock = () => {
         break;
     }
     editExperience(newExperience, index);
+    saveToLocal(name, location, contacts, educations, experiences, projects, skills);
     return;
   };
 
@@ -88,11 +90,11 @@ const ExperienceBlock = () => {
       </div>
       {
         experiences.map((experience: Experience, index) => (
-          <div key={index} className='ml-3 my-1' onContextMenu={handleRightClick}>
+          <div key={index} className='ml-3 my-1' onContextMenu={handleRightClick} id={`experience-${index}`}>
             <div className='flex justify-between text-[16.5px]'>
               <div className='group' onMouseEnter={(event) => loadEditText(event, experience.title)} id={`title-${index}`}>
                 <span className='group-hover:hidden font-semibold'>
-                  {experience.title}
+                  {experience.title ? experience.title : 'Title'}
                 </span>
                 <input
                   type="text"
@@ -107,7 +109,7 @@ const ExperienceBlock = () => {
               <div className='pr-2 flex flex-row'>
                 <span className='group' onMouseEnter={(event) => loadEditText(event, experience.startDate)} id={`startDate-${index}`}>
                   <span className='group-hover:hidden'>
-                    {experience.startDate}
+                    {experience.startDate ? experience.startDate : 'Start Date'}
                   </span>
                   <input
                     type="text"

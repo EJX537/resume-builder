@@ -1,6 +1,7 @@
 import React, { Dispatch, ReactNode } from 'react';
 
 export interface Education {
+  type: 'Education';
   school: string;
   location: string;
   startDate: string;
@@ -12,6 +13,7 @@ export interface Education {
 
 export const newEducation = (): Education => {
   return {
+    type: 'Education',
     school: 'University of ...',
     location: 'City, State',
     startDate: 'Start Date',
@@ -23,6 +25,7 @@ export const newEducation = (): Education => {
 };
 
 export interface Experience {
+  type: 'Experience';
   title: string;
   company: string;
   location?: string;
@@ -34,9 +37,10 @@ export interface Experience {
 
 export const newExperience = (): Experience => {
   return {
+    type: 'Experience',
     title: 'Title',
     company: 'Company',
-    location: 'location (optional)',
+    location: 'location',
     startDate: 'Start Date',
     endDate: 'End Date',
     bulletPoints: ['Worked on ...']
@@ -44,6 +48,7 @@ export const newExperience = (): Experience => {
 };
 
 export interface Project {
+  type: 'Project'
   name: string;
   date: string;
   description?: string;
@@ -52,18 +57,40 @@ export interface Project {
 }
 
 export const newProject = (): Project => {
+  const date = new Date();
+  const month = date.toLocaleDateString('Default', { month: 'long' });
+  const year = date.getFullYear();
   return {
-    name: 'Resumer builder',
-    date: 'September 2023',
-    technologies: ['Javascript'],
-    bulletPoints: ['Builds resumes']
+    type: 'Project',
+    name: 'Project',
+    date: `${month} ${year}`,
+    technologies: ['...'],
+    bulletPoints: ['...']
   };
 };
 
 export interface Skill {
-  type: string;
+  type: 'Skill';
+  skillType: string;
   skills: string[];
 }
+
+export const newSkill = (): Skill[] => {
+  return (
+    [
+      {
+        type: 'Skill',
+        skillType: 'Languages',
+        skills: ['...']
+      },
+      {
+        type: 'Skill',
+        skillType: 'Soft Skills',
+        skills: ['...']
+      }
+    ]
+  );
+};
 
 export interface Menu {
   clickedElements: string[];
@@ -84,6 +111,7 @@ export interface ResumeState {
   projects: Project[];
   setProjects: Dispatch<React.SetStateAction<Project[]>>;
   skills: Skill[];
+  setSkills: Dispatch<React.SetStateAction<Skill[]>>;
   menu: Menu;
   setMenu: Dispatch<React.SetStateAction<Menu>>;
   addEducation: (education: Education) => void;
@@ -99,7 +127,7 @@ export interface ResumeState {
   addProject: (project: Project) => void;
   removeProject: (index: number) => void;
   editProject: (project: Project, index: number) => void;
-  addSkills: (skill: Skill) => void;
+  addSkill: (skill: Skill) => void;
   editSkill: (skill: Skill, index: number) => void;
 }
 

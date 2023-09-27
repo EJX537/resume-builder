@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useResume } from '../../useResumeContext';
+import { saveToLocal } from '../util';
 
 const Name = () => {
-  const { name, setName } = useResume();
+  const { name, setName, location, contacts, educations, experiences, projects, skills } = useResume();
   const [editText, setText] = useState('');
 
   const [activeId, setActiveId] = useState('');
@@ -19,11 +20,13 @@ const Name = () => {
   const saveTextEdit = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== 'Enter') return;
     setName(editText);
+    saveToLocal(editText, location, contacts, educations, experiences, projects, skills);
     return;
   };
 
   const saveTextOnExit = () => {
     setName(editText);
+    saveToLocal(editText, location, contacts, educations, experiences, projects, skills);
     return;
   };
 

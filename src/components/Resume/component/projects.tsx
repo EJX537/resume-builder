@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Project } from '../../resumeTypes';
 import { useResume } from '../../useResumeContext';
+import { saveToLocal } from '../util';
 
 
 const ProjectBlock = () => {
-  const { projects, editProject, setMenu } = useResume();
+  const { projects, editProject, setMenu, contacts, educations, experiences, skills, name, location } = useResume();
   const [editText, setText] = useState('');
   const [activeId, setActiveId] = useState('');
 
   const loadEditText = (event: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLSpanElement>, text: string) => {
-    console.log(event.currentTarget.id);
     if (event.currentTarget.id === activeId) return;
     setActiveId(event.currentTarget.id);
     setText(text);
@@ -34,6 +34,7 @@ const ProjectBlock = () => {
         break;
     }
     editProject(newProject, index);
+    saveToLocal(name, location, contacts, educations, experiences, projects, skills);
     return;
   };
 
@@ -58,6 +59,7 @@ const ProjectBlock = () => {
         break;
     }
     editProject(newProject, index);
+    saveToLocal(name, location, contacts, educations, experiences, projects, skills);
     return;
   };
 
@@ -76,7 +78,7 @@ const ProjectBlock = () => {
       </div>
       {
         projects.map((project: Project, index) => (
-          <div key={index} className='ml-3 my-1' onContextMenu={handleRightClick}>
+          <div key={index} className='ml-3 my-1' onContextMenu={handleRightClick} id={`project-${index}`}>
             <div className='flex text-[16px]'>
               <div className='group' onMouseEnter={(event) => loadEditText(event, project.name)} id={`name-${index}`}>
                 <span className='group-hover:hidden font-semibold'>

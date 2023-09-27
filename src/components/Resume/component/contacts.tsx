@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useResume } from '../../useResumeContext';
+import { saveToLocal } from '../util';
 
 const classifyAndRenderContact = (contact: string, index: number) => {
   if (contact.match(/^\d{3}-\d{3}-\d{4}$/)) {
@@ -28,9 +29,8 @@ const classifyAndRenderContact = (contact: string, index: number) => {
     );
   }
 };
-
 const Contacts = () => {
-  const { contacts, setContacts, setMenu } = useResume();
+  const { contacts, setContacts, setMenu, name, location, educations, experiences, projects, skills } = useResume();
   const [editText, setText] = useState('');
   const [activeId, setActiveId] = useState('');
 
@@ -45,12 +45,16 @@ const Contacts = () => {
 
   const saveTextEdit = (event: React.KeyboardEvent<HTMLInputElement> | React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key !== 'Enter') return;
-    setContacts(editText.split('|'));
+    const contact = editText.split('|');
+    setContacts(contact);
+    saveToLocal(name, location, contact, educations, experiences, projects, skills);
     return;
   };
 
   const saveTextOnExit = () => {
-    setContacts(editText.split('|'));
+    const contact = editText.split('|');
+    setContacts(contact);
+    saveToLocal(name, location, contact, educations, experiences, projects, skills);
     return;
   };
 

@@ -18,7 +18,6 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
   };
 
   const removeEducation = (index: number) => {
-    console.log(educations);
     // if (!(0 < index && index < educations.length)) throw new Error('Error Education does not exist');
     const newEducations = [...educations];
     newEducations.splice(index, 1);
@@ -37,7 +36,7 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
   };
 
   const editExperience = (experience: Experience, index: number) => {
-    if (!(0 <= index && index < educations.length)) throw new Error('Error Experience does not exist');
+    if (!(0 <= index && index < experiences.length)) throw new Error('Error Experience does not exist');
     const newExperiences = [...experiences];
     newExperiences[index] = experience;
     setExperiences(newExperiences);
@@ -80,7 +79,7 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
 
   const addProject = (project: Project) => {
     const newProjects = [...projects, project];
-    projects.sort((a, b) => {
+    newProjects.sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
 
@@ -92,7 +91,7 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
   };
 
   const removeProject = (index: number) => {
-    if (!(0 < index && index < projects.length)) throw new Error('Error Project does not exist');
+    if (!(0 <= index && index < projects.length)) throw new Error('Error Project does not exist');
     const newProjects = [...projects];
     newProjects.splice(index, 1);
     setProjects(newProjects);
@@ -102,10 +101,18 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
     if (!(0 <= index && index < projects.length)) throw new Error('Error Project does not exist');
     const newProjects = [...projects];
     newProjects[index] = project;
+    newProjects.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+
+      if (dateA > dateB) return -1;
+      if (dateA < dateB) return 1;
+      return 0;
+    });
     setProjects(newProjects);
   };
 
-  const addSkills = (skill: Skill) => {
+  const addSkill = (skill: Skill) => {
     setSkills((prevSkills) => [...prevSkills, skill]);
   };
 
@@ -121,8 +128,8 @@ const ResumeProvider: React.FC<ProviderProps> = ({ children }) => {
       value={{
         name, setName, educations, addExperience, editExperience, removeExperience, contacts, setContacts, addContact, setExperiences,
         removeContact, location, setLocation, experiences, editContacts, rearrangeContacts, projects, setProjects,
-        addProject, removeProject, editProject, addEducation, removeEducation, editEducation, skills, addSkills, setEducations,
-        menu, setMenu, editSkill
+        addProject, removeProject, editProject, addEducation, removeEducation, editEducation, skills, addSkill, setEducations,
+        menu, setMenu, editSkill, setSkills
       }}>
       {children}
     </ResumeContext.Provider>
