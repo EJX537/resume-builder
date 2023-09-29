@@ -101,7 +101,6 @@ interface BlockProps {
 const BlockScope = (instance: string, { addEducation, addExperience, addProject, setSkills }: BlockProps): Content_Callback => {
   let content: string = '';
   let callBack_function: (() => void) | undefined;
-  console.log(instance);
   switch (instance) {
     case 'education':
       content = `Add ${instance}`;
@@ -143,7 +142,6 @@ const ElementScope = (instance: string, scope: string, { educations, editEducati
   const index = parseInt(scope, 10);
 
   if (instance === 'education') {
-    console.log(educations);
     if (!educations[index].gpa) {
       const education: Education = { ...educations[index] };
       education.gpa = '4.0';

@@ -23,8 +23,7 @@ const Resume = () => {
   const [loadOnce, setLoadOnce] = useState(false);
   const [clickedElements, setClickedElements] = useState<string[]>([]);
   const navigate = useNavigate();
-  const query = new URLSearchParams(useLocation().search);
-
+  const location = useLocation();
   const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     const e = event.currentTarget.id;
@@ -43,6 +42,7 @@ const Resume = () => {
 
   useEffect(() => {
     if (loadOnce) return;
+    const query = new URLSearchParams(location.search);
     const isPreviewEric = query.get('loadReferenceEricJXieFromRecent');
     navigate('/');
     if (isPreviewEric) {
@@ -51,7 +51,7 @@ const Resume = () => {
           const response = await fetch('https://assets.ericjxie.com/Resume.json');
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
-          } 
+          }
           const jsonData = await response.json();
           try {
             setName(jsonData['name']);
@@ -117,7 +117,7 @@ const Resume = () => {
     }
 
     setLoadOnce(true);
-  }, [addEducation, addExperience, addProject, addSkill, loadOnce, setContacts, setEducations, setExperiences, setLocation, setName, setProjects, setSkills]);
+  }, [addEducation, addExperience, addProject, addSkill, loadOnce, location.search, navigate, setContacts, setEducations, setExperiences, setLocation, setName, setProjects, setSkills]);
 
   return (
     <div className='flex h-full w-full items-center justify-center flex-col bg-slate-100'>
