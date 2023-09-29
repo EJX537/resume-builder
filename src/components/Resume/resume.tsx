@@ -5,13 +5,13 @@ import EducationBlock from './component/education';
 import ExperienceBlock from './component/experience';
 import ProjectBlock from './component/projects';
 import SkillBlock from './component/skills';
+import MenuBlock from './component/menu';
 
 import { newEducation, newExperience, newProject, newSkill } from '../resumeTypes';
-
-import { useEffect, useState } from 'react';
 import { useResume } from '../useResumeContext';
 
-import MenuBlock from './component/menu';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export interface MenuProps {
   clickedElements: string[];
@@ -22,6 +22,8 @@ const Resume = () => {
   const { setName, setLocation, addEducation, addExperience, addProject, addSkill, setMenu, setContacts, setSkills, setEducations, setProjects, setExperiences } = useResume();
   const [loadOnce, setLoadOnce] = useState(false);
   const [clickedElements, setClickedElements] = useState<string[]>([]);
+  const navigate = useNavigate();
+  const query = new URLSearchParams(useLocation().search);
 
   const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -41,6 +43,44 @@ const Resume = () => {
 
   useEffect(() => {
     if (loadOnce) return;
+    const isPreviewEric = query.get('loadReferenceEricJXieFromRecent');
+    navigate('/');
+    if (isPreviewEric) {
+      const fetchAndLoadData = async () => {
+        try {
+          const response = await fetch('https://assets.ericjxie.com/Resume.json');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          } 
+          const jsonData = await response.json();
+          try {
+            setName(jsonData['name']);
+          } catch (error) { /* empty */ }
+          try {
+            setContacts(jsonData['contacts']);
+          } catch (error) { /* empty */ }
+          try {
+            setLocation(jsonData['location']);
+          } catch (error) { /* empty */ }
+          try {
+            setEducations(jsonData['educations']);
+          } catch (error) { /* empty */ }
+          try {
+            setExperiences(jsonData['experiences']);
+          } catch (error) { /* empty */ }
+          try {
+            setProjects(jsonData['projects']);
+          } catch (error) { /* empty */ }
+          try {
+            setSkills(jsonData['skills']);
+          } catch (error) { /* empty */ }
+        } catch (error) {
+          throw new Error('Error: ' + error);
+        }
+      };
+      fetchAndLoadData();
+      return;
+    }
 
     const fromLocal = localStorage.getItem('resumeBuilder');
     if (fromLocal === null) {
@@ -53,7 +93,6 @@ const Resume = () => {
       setSkills(newSkill());
     } else {
       const parsedData = JSON.parse(fromLocal);
-      console.log(parsedData);
       try {
         setName(parsedData['name']);
       } catch (error) { /* empty */ }

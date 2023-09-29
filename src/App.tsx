@@ -2,16 +2,19 @@ import ResumeProvider from './components/resumeContextProvider';
 import Resume from './components/Resume/resume';
 import PdfGenerator from './components/Resume/component/pdfGenerator';
 
+import { BrowserRouter as Router } from 'react-router-dom';
 
 
 function App() {
   return (
-    <main className="flex h-screen w-screen flex-col justify-normal xl:mx-10">
-      <ResumeProvider>
-        <Resume />
-        <PdfGenerator />
-      </ResumeProvider>
-    </main>
+    <Router>
+      <main className="flex h-screen w-screen flex-col justify-normal">
+        <ResumeProvider>
+          <Resume />
+          <PdfGenerator />
+        </ResumeProvider>
+      </main>
+    </Router>
   );
 }
 
