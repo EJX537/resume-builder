@@ -26,7 +26,7 @@ const PdfGenerator = () => {
   };
 
   return (
-    <button className='border border-black rounded-lg p-2 font-bold text-red-950' onClick={handleGenerate}>
+    <button className='border border-black rounded-lg p-2 font-bold text-red-950 w-1/2' onClick={handleGenerate}>
       Generate PDF
     </button>
   );

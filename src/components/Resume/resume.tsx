@@ -120,7 +120,7 @@ const Resume = () => {
   }, [addEducation, addExperience, addProject, addSkill, loadOnce, location.search, navigate, setContacts, setEducations, setExperiences, setLocation, setName, setProjects, setSkills]);
 
   return (
-    <div className='flex h-full w-full items-center justify-center flex-col bg-slate-100'>
+    <div className='flex h-full w-full items-center justify-center flex-col'>
       <div className='w-[874px] h-[1131px] py-8 px-12 font-serif items-center justify-center bg-slate-50' id="resume-root" onContextMenu={handleRightClick} onClick={handleClick}>
         <Name />
         <Contacts />
