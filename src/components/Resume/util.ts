@@ -14,7 +14,4 @@ export const saveToLocal = (name: string, location: string, contacts: string[], 
   return;
 };
 
-export const readFromLocal = (): void => {
-  return;
-};
 
