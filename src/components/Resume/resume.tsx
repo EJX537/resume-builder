@@ -45,6 +45,7 @@ const Resume = () => {
     const query = new URLSearchParams(location.search);
     const isPreviewEric = query.get('loadReferenceEricJXieFromRecent');
     navigate('/');
+
     if (isPreviewEric) {
       const fetchAndLoadData = async () => {
         try {

@@ -9,7 +9,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 function App() {
   return (
     <Router>
-      <main className="flex h-screen w-screen flex-col justify-normal bg-slate-100">
+      <main className="flex min-h-[1131px] h-screen w-screen flex-col justify-normal bg-slate-100">
         <ResumeProvider>
           <Resume />
           <div className='flex w-full flex-row'>
